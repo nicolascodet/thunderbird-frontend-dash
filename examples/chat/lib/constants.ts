@@ -47,7 +47,7 @@ export const BASE_METADATA = {
     type: 'website',
     images: [
       {
-        url: `/opengraph-image.png?v=${Date.now()}`,
+        url: '/opengraph-image.png',
         width: 1200,
         height: 630,
         alt: 'MCP Chat by Pipedream',
@@ -61,7 +61,7 @@ export const BASE_METADATA = {
     creator: '@pipedream',
     images: [
       {
-        url: `/twitter-image.png?v=${Date.now()}`,
+        url: '/twitter-image.png',
         width: 1200,
         height: 630,
         alt: 'MCP Chat by Pipedream',
