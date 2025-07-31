@@ -50,7 +50,7 @@ export const Overview = () => {
               href="https://mcp.pipedream.com/"
               target="_blank"
             >
-              2700+ built-in APIs
+              2,800+ built-in APIs
             </Link>{" "}
              {" "}and 10k+ tools, use Pipedream MCP to supercharge your AI app or agent.
           </p>

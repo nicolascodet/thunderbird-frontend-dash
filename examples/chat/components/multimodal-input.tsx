@@ -235,8 +235,7 @@ function PureMultimodalInput({
       
       {messages.length === 0 &&
         attachments.length === 0 &&
-        uploadQueue.length === 0 &&
-        authStatus === 'authenticated' && (
+        uploadQueue.length === 0 && (
           <SuggestedActions append={append} chatId={chatId} />
         )}
 
@@ -445,8 +444,8 @@ function PureSendButton({
     <Button
       data-testid="send-button"
       className="rounded-full p-1.5 h-fit border dark:border-zinc-600"
-      onClick={(event) => {
-        submitForm(event);
+      onClick={() => {
+        submitForm();
       }}
       disabled={input.length === 0 || uploadQueue.length > 0}
     >
