@@ -31,8 +31,8 @@ export const BANNER_THEMES = {
 
 // Base metadata used throughout the application
 export const BASE_SITE_URL = 'https://chat.pipedream.com';
-export const BASE_TITLE = 'Pipedream Chat';
-export const BASE_DESCRIPTION = 'Use Pipedream Chat to talk directly with 2700+ APIs and supercharge your productivity';
+export const BASE_TITLE = 'MCP Chat by Pipedream';
+export const BASE_DESCRIPTION = 'Use MCP Chat by Pipedream to talk directly with 2700+ APIs and supercharge your productivity';
 
 export const BASE_METADATA = {
   metadataBase: new URL(BASE_SITE_URL),
@@ -50,7 +50,7 @@ export const BASE_METADATA = {
         url: '/opengraph-image.png',
         width: 1200,
         height: 630,
-        alt: 'Pipedream Chat',
+        alt: 'MCP Chat by Pipedream',
       }
     ],
   },
@@ -64,7 +64,7 @@ export const BASE_METADATA = {
         url: '/twitter-image.png',
         width: 1200,
         height: 630,
-        alt: 'Pipedream Chat',
+        alt: 'MCP Chat by Pipedream',
       }
     ],
   },
