@@ -1,6 +1,6 @@
 ## Pipedream Chat
 
-A reference implementation showcasing how to integrate Pipedream's MCP server into an AI chat app. This demo provides access to 10,000+ tools across 2,700+ APIs through a conversational interface and is based on the [Next.js AI Chatbot](https://chat.vercel.ai/).
+A reference implementation showcasing how to integrate Pipedream's MCP server into an AI chat app. This demo provides access to 10,000+ tools across 2,800+ APIs through a conversational interface and is based on the [Next.js AI Chatbot](https://chat.vercel.ai/).
 
 > Check out this app in production at: [chat.pipedream.com](https://chat.pipedream.com)
 

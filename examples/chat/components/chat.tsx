@@ -118,7 +118,7 @@ export function Chat({
             <div className="flex-1 flex flex-col justify-center items-center px-4">
               <div className="text-center mb-8 max-w-3xl">
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 mb-2">
-                  <h1 className="text-3xl font-bold max-w-[280px] sm:max-w-none leading-tight">Welcome to Pipedream Chat</h1>
+                  <h1 className="text-3xl font-bold max-w-[280px] sm:max-w-none leading-tight">Welcome to MCP Chat by Pipedream</h1>
                   <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 mt-1 sm:mt-0">
                     Alpha
                   </span>
@@ -126,7 +126,7 @@ export function Chat({
                 <p 
                   className="text-muted-foreground max-w-sm mx-auto"
                 >
-                  Chat directly with 2700+ APIs powered by {" "}
+                  Chat directly with 2,800+ APIs powered by {" "}
                   <Link
                     className="font-medium underline underline-offset-4"
                     href="https://pipedream.com/docs/connect/mcp/developers"
