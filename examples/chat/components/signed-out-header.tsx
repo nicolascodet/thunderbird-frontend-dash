@@ -18,7 +18,7 @@ export function SignedOutHeader() {
   };
 
   return (
-    <header className="flex items-center w-full px-4 py-3 bg-background gap-4">
+    <header className="flex items-center w-full px-4 py-3 bg-background gap-4 sticky top-0 z-10 border-b">
       <Link href="/" className="flex items-center">
         <Image
           src="/images/pipedream.svg"
