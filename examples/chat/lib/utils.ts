@@ -180,15 +180,53 @@ export function getTrailingMessageId({
   return trailingMessage.id;
 }
 
-export function prettifyToolName(name: string) {
+const thinkingPhrases = [
+  'Thinking',
+  'Processing bits',
+  'Noodling',
+  'Pondering',
+  'Processing',
+  'The robot is thinking',
+  'Computing',
+  'Mulling it over',
+  'Contemplating',
+  'Brain churning',
+  'Neurons firing',
+  'Cogitating',
+  'Mind melding',
+  'Synapses sparking',
+  'Ruminating',
+  'Deliberating',
+  'Brainstorming',
+  'Connecting dots',
+  'Crunching thoughts',
+  'Mental gymnastics',
+];
+
+// Simple hash function to get consistent index from string
+function simpleHash(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return Math.abs(hash);
+}
+
+export function prettifyToolName(name: string, seed?: string) {
   const normalized = name.replace(/[\s_-]+/g, '').toUpperCase();
-  const specialTools: Record<string, string> = {
+  const specialTools: Record<string, string | ((seed?: string) => string)> = {
     WEBSEARCH: 'Searching the web',
-    WHATAREYOUTRYINGTODO: 'Thinking',
+    WHATAREYOUTRYINGTODO: (seed) => {
+      const hash = simpleHash(seed || name);
+      return thinkingPhrases[hash % thinkingPhrases.length];
+    },
     SELECTAPPS: 'Selecting apps',
   };
   if (specialTools[normalized]) {
-    return specialTools[normalized];
+    const result = specialTools[normalized];
+    return typeof result === 'function' ? result(seed) : result;
   }
   // Else handle component tools with separators like _ or - or spaces.
   const words = name.split(/[\s_-]+/);

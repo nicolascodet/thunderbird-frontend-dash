@@ -22,14 +22,6 @@ import { UseChatHelpers } from '@ai-sdk/react';
 import { ToolCallRunning } from './tool-call-running';
 import { ToolCallResult } from './tool-call-result';
 
-function containsConnectLink(message: UIMessage, part: TextUIPart): boolean {
-  return (
-    message.role === "assistant" &&
-    part.type === "text" &&
-    part.text.includes("https://pipedream.com/_static/connect.html")
-  );
-}
-
 const PurePreviewMessage = ({
   chatId,
   message,
@@ -51,9 +43,6 @@ const PurePreviewMessage = ({
 }) => {
   const [mode, setMode] = useState<'view' | 'edit'>('view');
 
-  // this covers the case where you've reloaded the UI and what were originally parts of a message are now all individual ones.
-  const hideControls = message?.parts.length == 1 && message.parts[0].type === "text" && message.parts[0].text.includes("https://pipedream.com/_static/connect.html")
-
   return (
     <AnimatePresence>
       <motion.div
@@ -72,7 +61,7 @@ const PurePreviewMessage = ({
             },
           )}
         >
-          {message.role === 'assistant' && !hideControls && (
+          {message.role === 'assistant' && (
             <div className="size-8 flex items-center rounded-full justify-center ring-1 shrink-0 ring-border bg-background">
               <div className="translate-y-px">
                 <SparklesIcon size={14} />
@@ -130,7 +119,7 @@ const PurePreviewMessage = ({
                           <TooltipContent>Edit message</TooltipContent>
                         </Tooltip>
                       )}
-                      {!containsConnectLink(message, part) && (
+                      {!part.text.includes("https://pipedream.com/_static/connect.html") && (
                         <div
                           data-testid="message-content"
                           className={cn('flex flex-col gap-4', {
@@ -192,7 +181,7 @@ const PurePreviewMessage = ({
                           args={args}
                           isReadonly={isReadonly}
                         />
-                      ) : <ToolCallRunning name={toolName} />}
+                      ) : <ToolCallRunning name={toolName} toolCallId={toolCallId} />}
                     </div>
                   );
                 }
@@ -221,14 +210,14 @@ const PurePreviewMessage = ({
                           result={result}
                           isReadonly={isReadonly}
                         />
-                      ) : <ToolCallResult name={toolName} result={result} args={args} append={append} />}
+                      ) : <ToolCallResult name={toolName} result={result} args={args} append={append} toolCallId={toolCallId} />}
                     </div>
                   );
                 }
               }
             })}
 
-            {!isReadonly && !hideControls &&(
+            {!isReadonly && (
               <MessageActions
                 key={`action-${message.id}`}
                 chatId={chatId}

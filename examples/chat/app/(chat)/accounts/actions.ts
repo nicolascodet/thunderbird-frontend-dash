@@ -31,6 +31,33 @@ export async function getConnectedAccounts(): Promise<Account[]> {
 }
 
 /**
+ * Fetches a single connected account by ID for the current authenticated user
+ * @param accountId The ID of the account to fetch
+ * @returns The account if found and owned by the user, null otherwise
+ */
+export async function getConnectedAccountById(accountId: string): Promise<Account | null> {
+  const session = await getEffectiveSession();
+  if (!session?.user?.id) {
+    return null;
+  }
+  
+  try {
+    const response = await pdClient().getAccounts({
+      external_user_id: session.user.id,
+    });
+    
+    if (response?.data && Array.isArray(response.data)) {
+      const account = response.data.find(acc => acc.id === accountId);
+      return account || null;
+    }
+    
+    return null;
+  } catch (error) {
+    return null;
+  }
+}
+
+/**
  * Deletes a connected account by ID
  * @param accountId The ID of the account to delete
  */

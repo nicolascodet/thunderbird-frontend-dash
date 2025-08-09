@@ -1,4 +1,5 @@
 import { Button } from './ui/button';
+import { BookOpen } from 'lucide-react';
 
 type ButtonStyle = 'primary' | 'main' | 'secondary';
 
@@ -48,7 +49,8 @@ export function DocsButton({ className = "", style = 'main' }: DocsButtonProps) 
         rel="noopener noreferrer"
         className="flex items-center gap-2"
       >
-        <span className="hidden font-semibold sm:inline">Read the docs</span>
+        <BookOpen className="size-4" />
+        <span className="hidden sm:inline">Docs</span>
       </a>
     </Button>
   );

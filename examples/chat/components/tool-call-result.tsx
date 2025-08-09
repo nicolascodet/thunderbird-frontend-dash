@@ -12,6 +12,7 @@ import { prettifyToolName } from "@/lib/utils";
 import { UseChatHelpers } from '@ai-sdk/react';
 import { useEffectiveSession } from '@/hooks/use-effective-session';
 import type { Account } from '@pipedream/sdk';
+import { getConnectedAccountById } from '@/app/(chat)/accounts/actions';
 
 type ConnectParams = {
   token: string | undefined;
@@ -23,11 +24,13 @@ export const ToolCallResult = ({
   result,
   args,
   append,
+  toolCallId,
 }: {
   name: string
   args: any
   result: any
   append: UseChatHelpers['append'];
+  toolCallId?: string;
 }) => {
 
   const looksLikeJsonString = (value: unknown): boolean => {
@@ -227,15 +230,11 @@ export const ToolCallResult = ({
         append({ role: 'user', content: 'Done' });
 
         // Reflect connected state locally
-        // setIsConnected(true);
+        setIsConnected(true);
 
-        try {
-          // Fetch the specific account to get full metadata (e.g., account name)
-          const resp = await pd.getAccounts(accountId);
-          setConnectedAccount((resp as any)?.data || null);
-        } catch {
-          setConnectedAccount(null);
-        }
+        // Fetch the account details using server action
+        const account = await getConnectedAccountById(accountId);
+        setConnectedAccount(account);
       }
     })
   }
@@ -253,7 +252,7 @@ export const ToolCallResult = ({
             <Image src={iconUrl} alt="App icon" width={16} height={16} className="size-4 rounded" />
           </div>
         )}
-      <p className="text-sm text-slate-500 dark:text-slate-400">{prettifyToolName(name)}</p>
+      <p className="text-sm text-slate-500 dark:text-slate-400">{prettifyToolName(name, toolCallId)}</p>
         <ChevronRight className="size-4 text-slate-500 dark:text-slate-400 transition-transform duration-150 group-data-[state=open]:rotate-90" />
         <span className="sr-only">Toggle</span>
       </CollapsibleTrigger>
@@ -285,27 +284,21 @@ export const ToolCallResult = ({
                 Connect account
               </Button>
             ) : (
-              <div aria-live="polite" className="flex items-center gap-3 text-foreground">
-                <div className="size-8 rounded-md overflow-hidden flex items-center justify-center bg-gray-100 p-1.5">
+              <div aria-live="polite" className="flex items-center gap-2 px-4 py-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                <div className="size-7 rounded-md overflow-hidden flex items-center justify-center bg-white dark:bg-gray-800 shadow-sm">
                   <Image
                     src={(connectedAccount?.app?.img_src as string) || iconUrl}
                     alt={(connectedAccount?.app?.name as string) || 'App icon'}
-                    width={32}
-                    height={32}
-                    className="size-full object-contain"
+                    width={24}
+                    height={24}
+                    className="size-5 object-contain"
                   />
                 </div>
-                <div className="flex flex-col leading-tight">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-slate-500 dark:text-slate-400">
-                      {connectedAccount?.app?.name || prettifyToolName(name)}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1 text-green-600 dark:text-green-400 text-sm mt-3">
-                    <Check className="size-4" />
-                    <span>Connected {' '}</span>
-                    <span className="text-slate-500 dark:text-slate-400">
-                      ({connectedAccount?.name || 'Unnamed account'})
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-1.5">
+                    <Check className="size-3.5 text-green-600 dark:text-green-400" />
+                    <span className="text-sm font-medium text-green-700 dark:text-green-300">
+                      Connected{connectedAccount?.name ? ` (${connectedAccount.name})` : ''}
                     </span>
                   </div>
                 </div>
