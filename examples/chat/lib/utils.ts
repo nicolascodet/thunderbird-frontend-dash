@@ -180,20 +180,60 @@ export function getTrailingMessageId({
   return trailingMessage.id;
 }
 
-export function prettifyToolName(name: string) {
-  const specialTools: Record<string, string> = {
-    Web_Search: 'Searching the web',
-    WHAT_ARE_YOU_TRYING_TO_DO: 'Thinking deeply',
-    SELECT_APPS: 'Selecting apps',
+const thinkingPhrases = [
+  'Thinking',
+  'Processing bits',
+  'Noodling',
+  'Pondering',
+  'Processing',
+  'The robots are thinking',
+  'Computing',
+  'Mulling it over',
+  'Contemplating',
+  'Brain churning',
+  'Neurons firing',
+  'Cogitating',
+  'Mind melding',
+  'Synapses firing',
+  'Ruminating',
+  'Deliberating',
+  'Brainstorming',
+  'Connecting dots',
+  'Crunching thoughts',
+  'Performing mental gymnastics',
+  'Ideating',
+  'Beep boop',
+];
+
+// Simple hash function to get consistent index from string
+function simpleHash(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return Math.abs(hash);
+}
+
+export function prettifyToolName(name: string, seed?: string) {
+  const normalized = name.replace(/[\s_-]+/g, '').toUpperCase();
+  const specialTools: Record<string, string | ((seed?: string) => string)> = {
+    WEBSEARCH: 'Searching the web',
+    WHATAREYOUTRYINGTODO: (seed) => {
+      const hash = simpleHash(seed || name);
+      return thinkingPhrases[hash % thinkingPhrases.length];
+    },
+    SELECTAPPS: 'Selecting tools',
   };
-  if (specialTools[name]) {
-    return specialTools[name];
+  if (specialTools[normalized]) {
+    const result = specialTools[normalized];
+    return typeof result === 'function' ? result(seed) : result;
   }
-  // Else handle component tools
-  const words = name.split(/[_-]/);
-  const capitalizedWords = words.map((word) => {
-    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-  }
+  // Else handle component tools with separators like _ or - or spaces.
+  const words = name.split(/[\s_-]+/);
+  const capitalizedWords = words.map((word) =>
+    word ? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() : word,
   );
   return capitalizedWords.join(' ');
 }
