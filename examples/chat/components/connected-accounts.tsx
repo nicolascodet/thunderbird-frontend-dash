@@ -109,7 +109,7 @@ export function ConnectedAccounts({ accounts }: ConnectedAccountsProps) {
                     {account.app.name}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {account.name || 'Unnamed Account'}
+                    {account.name || 'Unnamed ccount'}
                   </p>
                   <div className="flex flex-col space-y-1 mt-1">
                     <p className="text-sm text-muted-foreground">

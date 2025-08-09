@@ -181,19 +181,19 @@ export function getTrailingMessageId({
 }
 
 export function prettifyToolName(name: string) {
+  const normalized = name.replace(/[\s_-]+/g, '').toUpperCase();
   const specialTools: Record<string, string> = {
-    Web_Search: 'Searching the web',
-    WHAT_ARE_YOU_TRYING_TO_DO: 'Thinking deeply',
-    SELECT_APPS: 'Selecting apps',
+    WEBSEARCH: 'Searching the web',
+    WHATAREYOUTRYINGTODO: 'Thinking',
+    SELECTAPPS: 'Selecting apps',
   };
-  if (specialTools[name]) {
-    return specialTools[name];
+  if (specialTools[normalized]) {
+    return specialTools[normalized];
   }
-  // Else handle component tools
-  const words = name.split(/[_-]/);
-  const capitalizedWords = words.map((word) => {
-    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-  }
+  // Else handle component tools with separators like _ or - or spaces.
+  const words = name.split(/[\s_-]+/);
+  const capitalizedWords = words.map((word) =>
+    word ? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() : word,
   );
   return capitalizedWords.join(' ');
 }

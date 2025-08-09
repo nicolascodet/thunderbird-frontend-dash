@@ -20,6 +20,11 @@ const nextConfig: NextConfig = {
       {
         hostname: "assets.pipedream.net",
       },
+      {
+        protocol: "https",
+        hostname: "pipedream.com",
+        pathname: "/s.v0/**",
+      },
     ],
   },
   output: "standalone",
