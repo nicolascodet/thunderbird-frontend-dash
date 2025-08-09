@@ -186,7 +186,7 @@ const thinkingPhrases = [
   'Noodling',
   'Pondering',
   'Processing',
-  'The robot is thinking',
+  'The robots are thinking',
   'Computing',
   'Mulling it over',
   'Contemplating',
@@ -200,7 +200,8 @@ const thinkingPhrases = [
   'Brainstorming',
   'Connecting dots',
   'Crunching thoughts',
-  'Mental gymnastics',
+  'Performing mental gymnastics',
+  'Ideating',
 ];
 
 // Simple hash function to get consistent index from string
@@ -222,7 +223,7 @@ export function prettifyToolName(name: string, seed?: string) {
       const hash = simpleHash(seed || name);
       return thinkingPhrases[hash % thinkingPhrases.length];
     },
-    SELECTAPPS: 'Selecting apps',
+    SELECTAPPS: 'Identifying apps',
   };
   if (specialTools[normalized]) {
     const result = specialTools[normalized];

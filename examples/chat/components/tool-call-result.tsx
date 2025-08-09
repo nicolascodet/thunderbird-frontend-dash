@@ -1,5 +1,5 @@
 import { Check, ChevronRight, Lock, Globe } from "lucide-react"
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   Collapsible,
   CollapsibleContent,
@@ -216,26 +216,41 @@ export const ToolCallResult = ({
   const { data: session } = useEffectiveSession();
   const [isConnected, setIsConnected] = useState(false);
   const [connectedAccount, setConnectedAccount] = useState<Account | null>(null);
-  const pd = createFrontendClient({
-    projectId: process.env.PIPEDREAM_PROJECT_ID!,
-    environment: (process.env.PIPEDREAM_PROJECT_ENVIRONMENT || 'production') as any,
-  });
+  const [isLoadingAccount, setIsLoadingAccount] = useState(false);
+  
+  // Create browser client for connect flow only
+  // No projectId needed - that's for server clients
+  // tokenCallback/externalUserId only needed for authenticated API calls like getAccounts
+  const pd = createFrontendClient({});
   const connectAccount = () => {
     if (!connectParams.app || !connectParams.token || !session?.user?.id) return;
+    
     pd.connectAccount({
       ...connectParams,
-      externalUserId: session.user.id,
+      externalUserId: session.user.id!,
       onSuccess: async ({ id: accountId }) => {
-        // Preserve existing behavior in the chat flow
-        append({ role: 'user', content: 'Done' });
-
-        // Reflect connected state locally
+        // Show connected state immediately
         setIsConnected(true);
-
-        // Fetch the account details using server action
-        const account = await getConnectedAccountById(accountId);
-        setConnectedAccount(account);
-      }
+        setIsLoadingAccount(true);
+        
+        // Fetch account details
+        try {
+          const account = await getConnectedAccountById(accountId);
+          setConnectedAccount(account);
+        } catch (error) {
+          // Still show connected even if details fail
+        } finally {
+          setIsLoadingAccount(false);
+        }
+        
+        // Delay the append to let user see the connected state for a moment
+        setTimeout(() => {
+          append({ role: 'user', content: 'Done' });
+        }, 2000);
+      },
+      onError: (error) => {
+        console.error('Connect account error:', error);
+      },
     })
   }
 
@@ -287,8 +302,8 @@ export const ToolCallResult = ({
               <div aria-live="polite" className="flex items-center gap-2 px-4 py-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
                 <div className="size-7 rounded-md overflow-hidden flex items-center justify-center bg-white dark:bg-gray-800 shadow-sm">
                   <Image
-                    src={(connectedAccount?.app?.img_src as string) || iconUrl}
-                    alt={(connectedAccount?.app?.name as string) || 'App icon'}
+                    src={connectedAccount?.app?.img_src || iconUrl}
+                    alt={connectedAccount?.app?.name || 'App icon'}
                     width={24}
                     height={24}
                     className="size-5 object-contain"
@@ -298,7 +313,12 @@ export const ToolCallResult = ({
                   <div className="flex items-center gap-1.5">
                     <Check className="size-3.5 text-green-600 dark:text-green-400" />
                     <span className="text-sm font-medium text-green-700 dark:text-green-300">
-                      Connected{connectedAccount?.name ? ` (${connectedAccount.name})` : ''}
+                      Connected
+                      {isLoadingAccount ? (
+                        <span className="ml-1 inline-block w-16 h-3 bg-green-200 dark:bg-green-800 rounded animate-pulse" />
+                      ) : connectedAccount?.name ? (
+                        <span> ({connectedAccount.name})</span>
+                      ) : null}
                     </span>
                   </div>
                 </div>
