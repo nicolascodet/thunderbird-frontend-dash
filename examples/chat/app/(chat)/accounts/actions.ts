@@ -42,13 +42,11 @@ export async function getConnectedAccountById(accountId: string): Promise<Accoun
   }
   
   try {
-    const response = await pdClient().getAccounts({
-      external_user_id: session.user.id,
-    });
+    const account = await pdClient().getAccountById(accountId);
     
-    if (response?.data && Array.isArray(response.data)) {
-      const account = response.data.find(acc => acc.id === accountId);
-      return account || null;
+    // Verify the account belongs to the current user
+    if (account && account.external_id === session.user.id) {
+      return account;
     }
     
     return null;

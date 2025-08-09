@@ -243,10 +243,10 @@ export const ToolCallResult = ({
           setIsLoadingAccount(false);
         }
         
-        // Delay the append to let user see the connected state for a moment
+        // Brief delay to let user see the success, then continue chat flow
         setTimeout(() => {
           append({ role: 'user', content: 'Done' });
-        }, 2000);
+        }, 1000);
       },
       onError: (error) => {
         console.error('Connect account error:', error);

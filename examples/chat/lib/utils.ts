@@ -194,7 +194,7 @@ const thinkingPhrases = [
   'Neurons firing',
   'Cogitating',
   'Mind melding',
-  'Synapses sparking',
+  'Synapses firing',
   'Ruminating',
   'Deliberating',
   'Brainstorming',
@@ -202,6 +202,7 @@ const thinkingPhrases = [
   'Crunching thoughts',
   'Performing mental gymnastics',
   'Ideating',
+  'Beep boop',
 ];
 
 // Simple hash function to get consistent index from string
@@ -223,7 +224,7 @@ export function prettifyToolName(name: string, seed?: string) {
       const hash = simpleHash(seed || name);
       return thinkingPhrases[hash % thinkingPhrases.length];
     },
-    SELECTAPPS: 'Identifying apps',
+    SELECTAPPS: 'Selecting tools',
   };
   if (specialTools[normalized]) {
     const result = specialTools[normalized];
