@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
     ppr: false,
   },
   images: {
+    contentDispositionType: "attachment",
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    dangerouslyAllowSVG: true,
     remotePatterns: [
       {
         hostname: "avatar.vercel.sh",
