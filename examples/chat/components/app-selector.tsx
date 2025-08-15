@@ -320,7 +320,7 @@ export function AppSelector({
 
                 // After content loads, scroll to the appropriate position
                 setTimeout(() => {
-                  const scrollContainer = document.querySelector('.overflow-y-auto');
+                  const scrollContainer = document.querySelector('[role="dialog"] .overflow-y-auto');
                   if (scrollContainer) {
                     // Calculate grid layout based on current window width
                     let columnsPerRow = 1; // Default to mobile
