@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   // Request up to page * pageSize records so we can slice locally.
   const limit = Math.min(page * pageSize, 100) // API max 100
 
-  const res = await pdClient().getApps({
+  const res = await pdClient().apps.list({
     limit,
     q: search.trim(),
     sortKey: "featured_weight",

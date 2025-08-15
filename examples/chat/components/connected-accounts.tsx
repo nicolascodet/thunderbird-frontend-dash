@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { deleteConnectedAccount } from '@/app/(chat)/accounts/actions';
 import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
-import { deleteConnectedAccount } from '@/app/(chat)/accounts/actions';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 import {
   AlertDialog,
@@ -17,7 +17,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { type Account } from '@pipedream/sdk';
+import { type Account } from '@pipedream/sdk/browser';
 
 interface ConnectedAccountsProps {
   accounts: Account[];
@@ -31,7 +31,7 @@ export function ConnectedAccounts({ accounts }: ConnectedAccountsProps) {
 
   const handleDelete = async () => {
     if (!accountToDelete) return;
-    
+
     try {
       setIsDeleting(accountToDelete);
       await deleteConnectedAccount(accountToDelete);
@@ -63,9 +63,9 @@ export function ConnectedAccounts({ accounts }: ConnectedAccountsProps) {
   }
 
   // Sort accounts alphabetically by app name then by account name
-  const sortedAccounts = [...accounts].sort((a, b) => {
+  const sortedAccounts = [...accounts].sort((a: Account, b: Account) => {
     // First sort by app name
-    const appNameComparison = (a.app.name || '').localeCompare(b.app.name || '');
+    const appNameComparison = (a.app?.name || '').localeCompare(b.app?.name || '');
     if (appNameComparison !== 0) {
       return appNameComparison;
     }
@@ -78,18 +78,18 @@ export function ConnectedAccounts({ accounts }: ConnectedAccountsProps) {
       <h3 className="text-lg font-medium mb-4">Manage your connected accounts</h3>
       <div className="grid gap-3 max-w-3xl">
         {sortedAccounts.map((account) => (
-          <div 
-            key={account.id} 
+          <div
+            key={account.id}
             className="flex flex-col p-3 rounded-md border"
           >
             <div className="flex items-start justify-between">
               <div className="flex items-start space-x-3">
                 <div className="mt-0.5">
-                  {account.app.img_src ? (
+                  {account.app?.imgSrc ? (
                     <div className="size-12 rounded-md overflow-hidden flex items-center justify-center bg-gray-100 p-1.5">
-                      <Image 
-                        src={account.app.img_src} 
-                        alt={account.app.name || 'App icon'} 
+                      <Image
+                        src={account.app.imgSrc}
+                        alt={account.app.name || 'App icon'}
                         className="size-full object-contain"
                         width={48}
                         height={48}
@@ -99,21 +99,21 @@ export function ConnectedAccounts({ accounts }: ConnectedAccountsProps) {
                     <div className="size-12 rounded-md flex items-center justify-center bg-gray-100">
                       {/* Default icon for apps without images */}
                       <span className="text-lg font-bold text-gray-400">
-                        {account.app.name?.charAt(0).toUpperCase() || '?'}
+                        {account.app?.name?.charAt(0).toUpperCase() || '?'}
                       </span>
                     </div>
                   )}
                 </div>
                 <div>
                   <p className="font-medium">
-                    {account.app.name}
+                    {account.app?.name}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {account.name || 'Unnamed ccount'}
+                    {account.name || 'Unnamed account'}
                   </p>
                   <div className="flex flex-col space-y-1 mt-1">
                     <p className="text-sm text-muted-foreground">
-                      Connected {new Date(account.created_at).toLocaleDateString()}
+                      Connected {account.createdAt ? new Date(account.createdAt).toLocaleDateString() : ''}
                     </p>
                   </div>
                 </div>

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { useDebounce } from '@/hooks/use-debounce';
-import { App, GetAppsResponse } from '@pipedream/sdk';
+import { type App, type ListAppsResponse } from '@pipedream/sdk/browser';
 import { Loader2, Search, X } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -14,9 +14,9 @@ interface AppSelectorProps {
   onAppSelect?: (app: App) => void;
 }
 
-export function AppSelector({ 
-  open, 
-  onOpenChange, 
+export function AppSelector({
+  open,
+  onOpenChange,
   onAppSelect
 }: AppSelectorProps) {
   const [search, setSearch] = useState('');
@@ -26,30 +26,30 @@ export function AppSelector({
   const [total, setTotal] = useState(0);
   const debouncedSearch = useDebounce(search, 300);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Constants for responsive grid layout
   const ROWS_PER_PAGE = 5;
   const BREAKPOINT_MD = 768; // Medium screens (3 columns)
   const BREAKPOINT_SM = 640; // Small screens (2 columns)
-  
+
   // Calculate page size based on viewport size to fill the grid
   const [pageSize, setPageSize] = useState(15); // Default to 15 (5 rows × 3 columns)
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
   const totalPages = Math.ceil(total / pageSize);
-  
+
   // Update window width on resize
   useEffect(() => {
     // Skip effect on server
     if (typeof window === 'undefined') return;
-    
+
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
-    
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-  
+
   // Update page size based on window width
   useEffect(() => {
     let columns = 1;
@@ -58,16 +58,16 @@ export function AppSelector({
     } else if (windowWidth >= BREAKPOINT_SM) {
       columns = 2; // 2 columns for small
     }
-    
+
     const newPageSize = columns * ROWS_PER_PAGE;
     setPageSize(newPageSize);
   }, [windowWidth]);
-  
+
   const fetchApps = async (
     searchTerm: string,
     pageNum: number,
     size: number
-  ): Promise<GetAppsResponse | null> => {
+  ): Promise<ListAppsResponse | null> => {
     const params = new URLSearchParams({
       search: searchTerm,
       page: pageNum.toString(),
@@ -85,7 +85,7 @@ export function AppSelector({
       throw new Error(`Failed to load apps: ${response.status}`)
     }
 
-    const res = (await response.json()) as GetAppsResponse
+    const res = (await response.json()) as ListAppsResponse
     return res
   }
 
@@ -104,7 +104,7 @@ export function AppSelector({
       }
 
       setApps(res.data)
-      setTotal(res.page_info?.total_count || res.data.length)
+      setTotal(res.pageInfo?.totalCount || res.data.length)
       setPage(1)
     } catch (error) {
       setError(
@@ -116,7 +116,7 @@ export function AppSelector({
       setLoading(false)
     }
   }, [debouncedSearch, pageSize])
-  
+
   // Simplified effect - only run when the dialog opens or search changes
   useEffect(() => {
     if (open) {
@@ -128,7 +128,7 @@ export function AppSelector({
       setApps([]);
     }
   }, [open, debouncedSearch, fetchInitialApps]);
-  
+
   /**
    * Fetches the next page of apps and adds them to the current list,
    * deduplicating by app.id to prevent duplicates
@@ -138,18 +138,18 @@ export function AppSelector({
       const nextPage = page + 1;
       setPage(nextPage);
       setLoading(true);
-      
+
       try {
         const res = await fetchApps(debouncedSearch, nextPage, pageSize);
-        
-        const totalCount = res?.page_info?.total_count || res?.data?.length || 0;
+
+        const totalCount = res?.pageInfo?.totalCount || res?.data?.length || 0;
 
         if (res?.data && Array.isArray(res.data)) {
           // Deduplicate apps based on app.id
           setApps((currentApps) => {
             const currentIds = new Set(currentApps.map((app) => app.id));
             const newUniqueApps = res.data.filter(
-              (app) => !currentIds.has(app.id)
+              (app: App) => !currentIds.has(app.id)
             );
             return [...currentApps, ...newUniqueApps];
           });
@@ -162,35 +162,35 @@ export function AppSelector({
       }
     }
   };
-  
+
   /**
    * Renders the app logo based on available image sources
    */
   const renderAppLogo = (app: App) => {
     if (app.id) {
       return (
-        <img 
+        <img
           src={`https://pipedream.com/s.v0/${app.id}/logo/48`}
           alt={`${app.name} logo`}
           className="max-w-full max-h-full object-contain"
         />
       );
-    } 
-    
-    if (app.img_src) {
+    }
+
+    if (app.imgSrc) {
       return (
-        <img 
-          src={app.img_src} 
+        <img
+          src={app.imgSrc}
           alt={`${app.name} logo`}
           className="max-w-full max-h-full object-contain"
         />
       );
     }
-    
+
     // Fallback to first letter of name
     return (
       <div className="size-full bg-muted flex items-center justify-center">
-        <span className="text-xs">{(app.name || app.name_slug || 'A').charAt(0)}</span>
+        <span className="text-xs">{(app.name || app.nameSlug || 'A').charAt(0)}</span>
       </div>
     );
   };
@@ -214,7 +214,7 @@ export function AppSelector({
             Browse and select from available integration tools
           </DialogDescription>
         </DialogHeader>
-        
+
         <div className="relative">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
@@ -224,7 +224,7 @@ export function AppSelector({
             onChange={(e) => setSearch(e.target.value)}
           />
           {search && (
-            <button 
+            <button
               type="button"
               className="absolute right-2.5 top-2.5 h-4 w-4 text-muted-foreground"
               onClick={() => setSearch('')}
@@ -233,7 +233,7 @@ export function AppSelector({
             </button>
           )}
         </div>
-        
+
         <div className="flex-1 overflow-y-auto mt-2 pr-2 h-[490px] scroll-behavior-auto relative pb-10">
           {loading && apps.length === 0 ? (
             <div className="flex justify-center items-center h-full">
@@ -254,9 +254,9 @@ export function AppSelector({
             <div className="flex justify-center items-center h-full">
               <div className="text-center text-muted-foreground">
                 <p className="mb-2">We couldn&apos;t find that app. Request new integrations{" "}
-                  <a 
-                    href="https://pipedream.com/support" 
-                    target="_blank" 
+                  <a
+                    href="https://pipedream.com/support"
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-500 hover:text-blue-600 hover:underline underline-offset-4"
                   >
@@ -280,7 +280,7 @@ export function AppSelector({
                         {renderAppLogo(app)}
                       </div>
                       <div className="font-medium">
-                        {app.name || app.name_slug || 'Unnamed App'}
+                        {app.name || app.nameSlug || 'Unnamed App'}
                       </div>
                     </div>
                     <div className="flex-1 min-w-0 px-4 pt-3 flex flex-col h-full">
@@ -299,25 +299,25 @@ export function AppSelector({
             </div>
           )}
         </div>
-        
+
         <div className="py-3 border-t mt-1 flex flex-col sm:flex-row justify-between items-center px-6 gap-3">
           <div className="hidden sm:block w-28"></div> {/* Empty space to balance layout on larger screens */}
-          
+
           {page < totalPages ? (
-            <Button 
+            <Button
               variant="outline"
               size="default"
               onClick={async (e) => {
                 // Constants for layout calculations
                 const CARD_HEIGHT = 170; // Height of each app card in pixels
                 const GAP_SIZE = 12; // Gap between cards (gap-3 = 0.75rem = 12px)
-                
+
                 // Remember current visible app count before loading more
                 const previousAppCount = apps.length;
-                
+
                 // Load more content
                 await handleLoadMore();
-                
+
                 // After content loads, scroll to the appropriate position
                 setTimeout(() => {
                   const scrollContainer = document.querySelector('.overflow-y-auto');
@@ -329,13 +329,13 @@ export function AppSelector({
                     } else if (windowWidth >= BREAKPOINT_SM) {
                       columnsPerRow = 2; // Tablet
                     }
-                    
+
                     // Calculate the row where new content starts
                     const prevRows = Math.ceil(previousAppCount / columnsPerRow);
-                    
+
                     // Calculate scroll position (including gaps)
                     const scrollPosition = prevRows * (CARD_HEIGHT + GAP_SIZE) - GAP_SIZE;
-                    
+
                     // Scroll to that position with smooth behavior
                     scrollContainer.scrollTo({
                       top: scrollPosition,
@@ -357,7 +357,7 @@ export function AppSelector({
           ) : (
             <div className="sm:block hidden order-2"></div> /* Empty div when no more pages (hidden on mobile) */
           )}
-          
+
           <span className="text-sm text-muted-foreground font-medium text-center whitespace-nowrap w-28 order-2 sm:order-3">
             {total} available apps
           </span>

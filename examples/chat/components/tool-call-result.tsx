@@ -1,18 +1,17 @@
-import { Check, ChevronRight, Lock, Globe } from "lucide-react"
-import { useState, useRef, useEffect } from 'react';
+import { getConnectedAccountById } from '@/app/(chat)/accounts/actions';
+import { useEffectiveSession } from '@/hooks/use-effective-session';
+import { prettifyToolName } from "@/lib/utils";
+import { UseChatHelpers } from '@ai-sdk/react';
+import { createFrontendClient, type Account, type ConnectResult } from "@pipedream/sdk/browser";
+import { Check, ChevronRight, Globe, Lock } from "lucide-react";
+import Image from 'next/image';
+import { useState } from 'react';
+import { Button } from './ui/button';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "./ui/collapsible"
-import { Button } from './ui/button';
-import Image from 'next/image';
-import { createFrontendClient } from "@pipedream/sdk/browser"
-import { prettifyToolName } from "@/lib/utils";
-import { UseChatHelpers } from '@ai-sdk/react';
-import { useEffectiveSession } from '@/hooks/use-effective-session';
-import type { Account } from '@pipedream/sdk';
-import { getConnectedAccountById } from '@/app/(chat)/accounts/actions';
+} from "./ui/collapsible";
 
 type ConnectParams = {
   token: string | undefined;
@@ -217,22 +216,28 @@ export const ToolCallResult = ({
   const [isConnected, setIsConnected] = useState(false);
   const [connectedAccount, setConnectedAccount] = useState<Account | null>(null);
   const [isLoadingAccount, setIsLoadingAccount] = useState(false);
-  
+
   // Create browser client for connect flow only
   // No projectId needed - that's for server clients
   // tokenCallback/externalUserId only needed for authenticated API calls like getAccounts
-  const pd = createFrontendClient({});
+  const { id: externalUserId } = session?.user || {};
+  if (!externalUserId) return;
+  const pd = createFrontendClient({
+    externalUserId,
+  });
+
   const connectAccount = () => {
-    if (!connectParams.app || !connectParams.token || !session?.user?.id) return;
-    
+    const { app, token } = connectParams;
+    if (!app || !token) return;
+
     pd.connectAccount({
-      ...connectParams,
-      externalUserId: session.user.id!,
-      onSuccess: async ({ id: accountId }) => {
+      app,
+      token,
+      onSuccess: async ({ id: accountId }: ConnectResult) => {
         // Show connected state immediately
         setIsConnected(true);
         setIsLoadingAccount(true);
-        
+
         // Fetch account details
         try {
           const account = await getConnectedAccountById(accountId);
@@ -242,7 +247,7 @@ export const ToolCallResult = ({
         } finally {
           setIsLoadingAccount(false);
         }
-        
+
         // Brief delay to let user see the success, then continue chat flow
         setTimeout(() => {
           append({ role: 'user', content: 'Done' });
@@ -267,7 +272,7 @@ export const ToolCallResult = ({
             <Image src={iconUrl} alt="App icon" width={16} height={16} className="size-4 rounded" />
           </div>
         )}
-      <p className="text-sm text-slate-500 dark:text-slate-400">{prettifyToolName(name, toolCallId)}</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">{prettifyToolName(name, toolCallId)}</p>
         <ChevronRight className="size-4 text-slate-500 dark:text-slate-400 transition-transform duration-150 group-data-[state=open]:rotate-90" />
         <span className="sr-only">Toggle</span>
       </CollapsibleTrigger>
@@ -291,18 +296,18 @@ export const ToolCallResult = ({
                 variant="blue"
                 onClick={connectAccount}
               >
-              {(appId) && (
-                <div className="flex items-center justify-center size-6 bg-white dark:bg-gray-100 rounded-sm overflow-hidden mr-1">
-                  <Image src={iconUrl} alt="App icon" width={20} height={20} className="size-5 rounded" />
-                </div>
-              )}
+                {(appId) && (
+                  <div className="flex items-center justify-center size-6 bg-white dark:bg-gray-100 rounded-sm overflow-hidden mr-1">
+                    <Image src={iconUrl} alt="App icon" width={20} height={20} className="size-5 rounded" />
+                  </div>
+                )}
                 Connect account
               </Button>
             ) : (
               <div aria-live="polite" className="flex items-center gap-2 px-4 py-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
                 <div className="size-7 rounded-md overflow-hidden flex items-center justify-center bg-white dark:bg-gray-800 shadow-sm">
                   <Image
-                    src={connectedAccount?.app?.img_src || iconUrl}
+                    src={connectedAccount?.app?.imgSrc || iconUrl}
                     alt={connectedAccount?.app?.name || 'App icon'}
                     width={24}
                     height={24}

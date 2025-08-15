@@ -1,22 +1,15 @@
-import { BackendClient, createBackendClient, ProjectEnvironment } from '@pipedream/sdk/server';
+import { PipedreamClient } from '@pipedream/sdk';
 
-let _pd: BackendClient | undefined;
+let _pd: PipedreamClient | undefined;
 
-export function pdClient(): BackendClient {
+export function pdClient(): PipedreamClient {
   if (_pd) return _pd;
-  _pd = createBackendClient({
-    environment: (process.env.PIPEDREAM_PROJECT_ENVIRONMENT || 'production') as ProjectEnvironment,
-    credentials: {
-      clientId: process.env.PIPEDREAM_CLIENT_ID!,
-      clientSecret: process.env.PIPEDREAM_CLIENT_SECRET!,
-    },
-    projectId: process.env.PIPEDREAM_PROJECT_ID!,
-  });
+  _pd = new PipedreamClient();
   return _pd;
 }
 
 export const pdHeaders = async (exuid: string) => {
-  const accessToken = await pdClient().rawAccessToken();
+  const accessToken = await pdClient().rawAccessToken;
 
   return {
     Authorization: `Bearer ${accessToken}`,

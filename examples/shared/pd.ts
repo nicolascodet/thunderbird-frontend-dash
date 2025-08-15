@@ -1,4 +1,4 @@
-import { createBackendClient } from "@pipedream/sdk";
+import { PipedreamClient } from "@pipedream/sdk";
 import { loadAndValidateConfig } from "./config";
 import { z } from "zod";
 
@@ -17,17 +17,10 @@ export const config = loadAndValidateConfig(
   })
 );
 
-export const pd = createBackendClient({
-  credentials: {
-    clientId: config.PIPEDREAM_CLIENT_ID,
-    clientSecret: config.PIPEDREAM_CLIENT_SECRET,
-  },
-  projectId: config.PIPEDREAM_PROJECT_ID,
-  environment: config.PIPEDREAM_PROJECT_ENVIRONMENT,
-});
+export const pd = new PipedreamClient();
 
 export const pdHeaders = async (exuid: string) => {
-  const accessToken = await pd.rawAccessToken();
+  const accessToken = await pd.rawAccessToken;
 
   return {
     Authorization: `Bearer ${accessToken}`,

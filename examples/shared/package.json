@@ -10,7 +10,7 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@pipedream/sdk": "^1.6.9",
+    "@pipedream/sdk": "2.0.0-rc.8",
     "dotenv": "^16.3.1",
     "zod": "^3.23.0",
     "commander": "^12.0.0",
