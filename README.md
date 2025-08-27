@@ -8,15 +8,15 @@
 </p>
 
 <p align="center">
-  <a href="https://pipedream.com/docs/connect/mcp/developers"><strong>Read the docs</strong></a> ·
   <a href="#features"><strong>Features</strong></a> ·
   <a href="#model-providers"><strong>Model Providers</strong></a> ·
+  <a href="#prerequisites"><strong>Prerequisites</strong></a> ·
   <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
   <a href="#running-locally"><strong>Running Locally</strong></a>
 </p>
 <br/>
 
-> Check out this app in production at [chat.pipedream.com](https://chat.pipedream.com) and refer to [Pipedream's developer docs](https://pipedream.com/docs/connect/mcp/developers) for the most up to date information.
+> **Check out the app in production at [chat.pipedream.com](https://chat.pipedream.com) and refer to [Pipedream's developer docs](https://pipedream.com/docs/connect/mcp/developers) for the most up to date information.**
 
 ## Features
 
@@ -29,6 +29,15 @@
 ## Model Providers
 
 The demo app currently uses models from Anthropic, OpenAI, and Gemini, but the AI SDK supports [many more](https://sdk.vercel.ai/providers/ai-sdk-providers).
+
+### Prerequisites
+
+To run or deploy this app, you'll need:
+
+1. A [Pipedream account](https://pipedream.com/auth/signup)
+2. A [Pipedream project](https://pipedream.com/docs/projects/#creating-projects). Accounts connected via MCP will be stored here.
+3. [Pipedream OAuth credentials](https://pipedream.com/docs/rest-api/auth/#oauth)
+4. An [OpenAI API key](https://platform.openai.com/api-keys)
 
 ## Deploy Your Own
 
