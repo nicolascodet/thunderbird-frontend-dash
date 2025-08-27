@@ -1,94 +1,77 @@
-# Pipedream MCP Examples
+<a href="https://chat.pipedream.com/">
+  <img alt="MCP Chat by Pipedream" src="app/(chat)/opengraph-image.png">
+  <h1 align="center">MCP Chat by Pipedream</h1>
+</a>
 
-This repo contains examples to highlight how you can build an AI chat app using Pipedream's MCP server.
+<p align="center">
+  MCP Chat is a free, open-source chat app built using the AI SDK, and Pipedream MCP, which provides access to nearly 3,000 APIs and more than 10,000 tools. Use this as a reference to build powerful AI chat applications.
+</p>
 
-> Check out the chat app in production at: [chat.pipedream.com](https://chat.pipedream.com)
+<p align="center">
+  <a href="https://pipedream.com/docs/connect/mcp/developers"><strong>Read the docs</strong></a> ·
+  <a href="#features"><strong>Features</strong></a> ·
+  <a href="#model-providers"><strong>Model Providers</strong></a> ·
+  <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
+  <a href="#running-locally"><strong>Running Locally</strong></a>
+</p>
+<br/>
 
-## What makes Pipedream's MCP server unique
+> Check out this app in production at [chat.pipedream.com](https://chat.pipedream.com) and refer to [Pipedream's developer docs](https://pipedream.com/docs/connect/mcp/developers) for the most up to date information.
 
-Most traditional MCP implementations provide only a fixed set of tools. Pipedream's MCP server offers the ability to identify and load tools dynamically, which means tools can either be pre-defined or discovered and configured on-demand, based on the user's query.
+## Features
 
-This type of [tool discovery](https://modelcontextprotocol.io/docs/concepts/tools#tool-discovery-and-updates) is defined in the MCP spec, but most MCP clients don't support yet provide support for it.
+- **MCP integrations**: Connect to thousands of APIs through Pipedream's MCP server with built-in auth
+- **Automatic tool discovery**: Execute tool calls across different APIs via chat
+- **Uses the [AI SDK](https://sdk.vercel.ai/docs)**: Unified API for generating text, structured objects, and tool calls with LLMs
+- **Flexible LLM and framework support**: Works with any LLM provider or framework
+- **Data persistence**: Uses [Neon Serverless Postgres](https://vercel.com/marketplace/neon) for saving chat history and user data and [Auth.js](https://authjs.dev) for simple and secure sign-in
 
-This repo contains examples of how you, as the developer of an MCP client, can use Pipedream's app-level **or dynamic** MCP server by manually reloading the list of tools on each turn.
+## Model Providers
 
-## Examples
+The demo app currently uses models from Anthropic, OpenAI, and Gemini, but the AI SDK supports [many more](https://sdk.vercel.ai/providers/ai-sdk-providers).
 
-This repo includes three examples showing different approaches to integrating with Pipedream's dynamic MCP server:
+## Deploy Your Own
 
-- The **[Chat App Example](examples/chat/)** is a full-featured web application demonstrating MCP integration in a real-world chat interface
-- The **[AI SDK Example](examples/ai-sdk/)** uses Vercel's AI SDK with automatic tool handling
-- The **[OpenAI SDK Example](examples/openai-sdk/)** uses OpenAI SDK directly with manual tool conversion for full control
+One-click deploy this app to Vercel:
 
-### Installation
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FPipedreamHQ%2Fmcp-chat&env=PIPEDREAM_CLIENT_ID,PIPEDREAM_CLIENT_SECRET,PIPEDREAM_PROJECT_ID,PIPEDREAM_PROJECT_ENVIRONMENT,AUTH_SECRET,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,OPENAI_API_KEY,EXA_API_KEY,POSTGRES_URL&envDescription=API%20keys%20need%20to%20run%20the%20app)
 
-Install dependencies:
+## Running locally
+
+1. Copy the environment file and add your credentials:
+
+```bash
+cp .env.example .env  # Edit with your values
+```
+
+2. Run all required local services:
+
+```bash
+docker compose up -d
+```
+
+3. Run migrations:
+
+```bash
+POSTGRES_URL=postgresql://postgres@localhost:5432/postgres pnpm db:migrate
+```
+
+4. Install dependencies and start the app:
 
 ```bash
 pnpm install
+pnpm dev
 ```
 
-### Prerequisites
+Your local app should now be running on [http://localhost:3000](http://localhost:3000/).
 
-To set up your environment, you'll need:
+### Get up and running quickly
 
-1. A [Pipedream account](https://pipedream.com/auth/signup)
-2. A [Pipedream project](https://pipedream.com/docs/projects/#creating-projects). Accounts connected via MCP will be stored here.
-3. [Pipedream OAuth credentials](https://pipedream.com/docs/rest-api/auth/#oauth)
-4. An [OpenAI API key](https://platform.openai.com/api-keys)
-
-### Set up your environment
-
-Copy the example environment file and add your credentials:
+For easier local development, you can disable the application sign-in and chat persistence:
 
 ```bash
-cp .env.example .env
-```
-
-Learn more about [environments in Pipedream Connect](https://pipedream.com/docs/connect/managed-auth/environments).
-
-### Running the examples
-
-You can run the examples using the following commands from the root directory:
-
-#### Chat App Example
-
-The chat app is a full-featured Next.js web application that demonstrates MCP integration in a production-ready environment:
-
-```bash
-pnpm chat
-```
-
-The chat app includes:
-
-- **MCP integrations**: Connect to thousands of APIs through Pipedream's MCP server with built-in auth
-- **Flexible LLM and framework support**: Works with any LLM provider or framework
-- **Tool discovery**: Execute tool calls across different APIs via chat
-
-For development, you can disable user sign-in and chat storage by setting these env vars:
-
-```bash
-# In .env
+# In your .env file
 DISABLE_AUTH=true
 DISABLE_PERSISTENCE=true
 EXTERNAL_USER_ID=your-dev-user-id
-```
-
-#### Vercel AI SDK Example
-
-```bash
-pnpm ai-sdk -u <external-user-id> "<prompt>"
-```
-
-#### OpenAI SDK Example
-
-```bash
-pnpm openai-sdk -u <external-user-id> "<prompt>"
-```
-
-For example:
-
-```bash
-pnpm ai-sdk -u <uuid> "Send a funny joke to the #random channel in Slack"
-pnpm openai-sdk -u <uuid> "Send a funny joke to the #random channel in Slack"
 ```

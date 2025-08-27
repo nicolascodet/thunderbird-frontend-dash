@@ -2,25 +2,8 @@ import { anthropic } from "@ai-sdk/anthropic"
 import { google } from '@ai-sdk/google';
 import { openai } from "@ai-sdk/openai"
 import { customProvider } from "ai"
-import { isTestEnvironment } from "../constants"
-import {
-  artifactModel,
-  chatModel,
-  reasoningModel,
-  titleModel,
-} from "./models.test"
 
-export const myProvider = isTestEnvironment
-  ? customProvider({
-      languageModels: {
-        "chat-model-small": chatModel,
-        "chat-model-large": chatModel,
-        "chat-model-reasoning": reasoningModel,
-        "title-model": titleModel,
-        "artifact-model": artifactModel,
-      },
-    })
-  : customProvider({
+export const myProvider = customProvider({
       languageModels: {
         "gemini-2.5-flash": google("gemini-2.5-flash"),
         "gpt-4o-mini": openai("gpt-4o-mini"),
