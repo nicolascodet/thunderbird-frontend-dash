@@ -53,34 +53,33 @@ One-click deploy this app to Vercel:
 cp .env.example .env  # Edit with your values
 ```
 
-2. Run all required local services:
+Note that for easier development, chat persistence and application sign-in are disabled by default in the `.env.example` file:
 
 ```bash
-docker compose up -d
+# In your .env file
+DISABLE_AUTH=true
+DISABLE_PERSISTENCE=true
 ```
 
-3. Run migrations:
-
-```bash
-POSTGRES_URL=postgresql://postgres@localhost:5432/postgres pnpm db:migrate
-```
-
-4. Install dependencies and start the app:
+2. Install dependencies and start the app:
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-Your local app should now be running on [http://localhost:3000](http://localhost:3000/).
+Your local app should now be running on [http://localhost:3000](http://localhost:3000/) 🎉
 
-### Get up and running quickly
+### Enabling chat persistence
 
-For easier local development, you can disable the application sign-in and chat persistence:
+1. Run all required local services:
 
 ```bash
-# In your .env file
-DISABLE_AUTH=true
-DISABLE_PERSISTENCE=true
-EXTERNAL_USER_ID=your-dev-user-id
+docker compose up -d
+```
+
+2. Run migrations:
+
+```bash
+POSTGRES_URL=postgresql://postgres@localhost:5432/postgres pnpm db:migrate
 ```
