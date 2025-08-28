@@ -101,7 +101,7 @@ export function Chat({
             </p>
           </div>
           <div className="text-sm text-muted-foreground">
-            <p>Need help? Check the <Link href="https://github.com/pipedreamhq/mcp" className="underline hover:text-foreground">README</Link> for setup instructions.</p>
+            <p>Need help? Check the <Link href="https://github.com/PipedreamHQ/mcp-chat?tab=readme-ov-file#prerequisites" className="underline hover:text-foreground">README</Link> for setup instructions.</p>
           </div>
         </div>
       </div>
