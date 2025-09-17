@@ -1,7 +1,7 @@
 import { auth } from "@/app/(auth)/auth"
 import { systemPrompt } from "@/lib/ai/prompts"
 import { myProvider } from "@/lib/ai/providers"
-import { isProductionEnvironment, isAuthDisabled } from "@/lib/constants"
+import { isProductionEnvironment } from "@/lib/constants"
 import {
   deleteChatById,
   getChatById,
@@ -13,7 +13,7 @@ import {
   getMostRecentUserMessage,
   getTrailingMessageId,
 } from "@/lib/utils"
-import { getEffectiveSession, shouldPersistData } from "@/lib/auth-utils"
+import { shouldPersistData } from "@/lib/auth-utils"
 import { MCPSessionManager } from "@/mods/mcp-client"
 import {
   UIMessage,
@@ -41,10 +41,13 @@ export async function POST(request: Request) {
       selectedChatModel: string
     } = await request.json()
 
-    const session = await getEffectiveSession()
+    const session = await auth()
 
-    // Always use a fallback user ID if session is not available
-    const userId = session?.user?.id || process.env.EXTERNAL_USER_ID || 'default-user'
+    if (!session || !session.user || !session.user.id) {
+      return new Response("Unauthorized", { status: 401 })
+    }
+
+    const userId = session.user.id
 
     const userMessage = getMostRecentUserMessage(messages)
 
@@ -63,8 +66,7 @@ export async function POST(request: Request) {
 
         await saveChat({ id, userId, title })
       } else {
-        // Skip ownership check when auth is disabled
-        if (!isAuthDisabled && chat.userId !== userId) {
+        if (chat.userId !== userId) {
           return new Response("Unauthorized", { status: 401 })
         }
       }
@@ -195,10 +197,13 @@ export async function DELETE(request: Request) {
     return new Response("Not Found", { status: 404 })
   }
 
-  const session = await getEffectiveSession()
+  const session = await auth()
 
-  // Always use a fallback user ID if session is not available
-  const userId = session?.user?.id || process.env.EXTERNAL_USER_ID || 'default-user'
+  if (!session || !session.user) {
+    return new Response("Unauthorized", { status: 401 })
+  }
+
+  const userId = session.user.id
 
   // In dev mode without auth, just return success without deleting
   if (!shouldPersistData()) {
@@ -208,8 +213,7 @@ export async function DELETE(request: Request) {
   try {
     const chat = await getChatById({ id })
 
-    // Skip ownership check when auth is disabled
-    if (!isAuthDisabled && chat.userId !== userId) {
+    if (chat.userId !== userId) {
       return new Response("Unauthorized", { status: 401 })
     }
 
