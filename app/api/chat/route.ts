@@ -43,16 +43,8 @@ export async function POST(request: Request) {
 
     const session = await getEffectiveSession()
 
-    if (!session || !session.user || !session.user.id) {
-      return new Response(JSON.stringify({ error: "Authentication required", redirectToAuth: true }), {
-        status: 401,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-    }
-
-    const userId = session.user.id
+    // Always use a fallback user ID if session is not available
+    const userId = session?.user?.id || process.env.EXTERNAL_USER_ID || 'default-user'
 
     const userMessage = getMostRecentUserMessage(messages)
 
@@ -71,7 +63,8 @@ export async function POST(request: Request) {
 
         await saveChat({ id, userId, title })
       } else {
-        if (chat.userId !== userId) {
+        // Skip ownership check when auth is disabled
+        if (!isAuthDisabled && chat.userId !== userId) {
           return new Response("Unauthorized", { status: 401 })
         }
       }
@@ -204,11 +197,8 @@ export async function DELETE(request: Request) {
 
   const session = await getEffectiveSession()
 
-  if (!session || !session.user) {
-    return new Response("Unauthorized", { status: 401 })
-  }
-  
-  const userId = session.user.id
+  // Always use a fallback user ID if session is not available
+  const userId = session?.user?.id || process.env.EXTERNAL_USER_ID || 'default-user'
 
   // In dev mode without auth, just return success without deleting
   if (!shouldPersistData()) {
@@ -218,7 +208,8 @@ export async function DELETE(request: Request) {
   try {
     const chat = await getChatById({ id })
 
-    if (chat.userId !== userId) {
+    // Skip ownership check when auth is disabled
+    if (!isAuthDisabled && chat.userId !== userId) {
       return new Response("Unauthorized", { status: 401 })
     }
 
