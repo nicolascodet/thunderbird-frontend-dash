@@ -26,6 +26,7 @@ export function SimpleChat({
     reload,
   } = useChat({
     id,
+    api: '/api/chat',
     body: { id, selectedChatModel: 'gpt-4o-mini' },
     initialMessages,
     experimental_throttle: 100,
