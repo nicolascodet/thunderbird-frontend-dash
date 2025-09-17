@@ -53,29 +53,30 @@ function PureSuggestedActions({ chatId, append }: SuggestedActionsProps) {
   
   const suggestedActions: SuggestedAction[] = [
     {
-      title: 'Check my emails',
-      label: 'and summarize important messages',
-      action: 'Check my recent Gmail inbox for important emails and give me a brief summary of anything urgent.',
-      appSlugs: ['app_1TpJxE'],
-      webSearchIcon: false,
+      title: 'Research my competitors',
+      label: 'and create a summary report',
+      action: 'Research my top 3 competitors and create a comprehensive summary of their latest updates, features, and market positioning.',
+      appSlugs: [],
+      webSearchIcon: true,
     },
     {
-      title: 'What\'s on my calendar',
-      label: 'for tomorrow',
-      action: 'Show me my Google Calendar events for tomorrow and highlight any important meetings.',
+      title: 'Plan my week',
+      label: 'based on my priorities',
+      action: 'Help me plan my week by reviewing my calendar and suggesting time blocks for deep work, meetings, and breaks.',
       appSlugs: ['app_13Gh2V'],
     },
     {
-      title: 'Create a task list',
-      label: 'in Notion for today',
-      action: 'Create a new task list page in Notion for today with sections for urgent, important, and nice-to-have items.',
-      appSlugs: ['app_X7Lhxr'],
+      title: 'Write a project update',
+      label: 'for my team',
+      action: 'Draft a project status update email for my team, highlighting completed milestones, current progress, and next steps.',
+      appSlugs: [],
     },
     {
-      title: 'Analyze my GitHub activity',
-      label: 'from the past week',
-      action: 'Show me my GitHub commits and pull requests from the past week and summarize what I worked on.',
-      appSlugs: ['app_OrZhaO'],
+      title: 'Brainstorm new ideas',
+      label: 'for product improvements',
+      action: 'Help me brainstorm creative ideas for improving our product based on current market trends and user feedback.',
+      appSlugs: [],
+      webSearchIcon: true,
     },
   ];
 
@@ -102,37 +103,10 @@ function PureSuggestedActions({ chatId, append }: SuggestedActionsProps) {
           <Button
             variant="ghost"
             onClick={(e) => handleActionClick(e, suggestedAction.action)}
-            className="text-left border rounded-xl px-4 py-3.5 text-sm flex-1 flex-col gap-1 w-full h-auto justify-start items-start"
+            className="text-left border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-3.5 text-sm flex-1 flex-col gap-1 w-full h-auto justify-start items-start hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
           >
-            <div className="flex justify-between items-start w-full">
-              <span className="font-medium">{suggestedAction.title}</span>
-              {(suggestedAction.appSlugs && suggestedAction.appSlugs.length > 0 || suggestedAction.webSearchIcon) && (
-                <div className="flex items-center gap-1.5 ml-2 flex-shrink-0">
-                  {/* Add web search icon */}
-                  {suggestedAction.webSearchIcon && (
-                    <div 
-                      className="size-5 rounded-sm overflow-hidden flex items-center justify-center bg-muted/20"
-                    >
-                      <Globe className="size-4 text-foreground/70 dark:text-white" />
-                    </div>
-                  )}
-                  {/* Add app icons (limit to 2) */}
-                  {suggestedAction.appSlugs && suggestedAction.appSlugs.slice(0, suggestedAction.webSearchIcon ? 2 : 3).map((slug) => (
-                    <div 
-                      key={`app-icon-${slug}`} 
-                      className="size-5 rounded-sm overflow-hidden flex items-center justify-center"
-                    >
-                      <img
-                        src={`https://pipedream.com/s.v0/${slug}/logo/48`}
-                        alt={slug}
-                        className="size-full object-contain"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-            <span className="text-muted-foreground break-words">
+            <span className="font-medium text-gray-900 dark:text-gray-100">{suggestedAction.title}</span>
+            <span className="text-gray-600 dark:text-gray-400 text-xs break-words">
               {suggestedAction.label}
             </span>
           </Button>

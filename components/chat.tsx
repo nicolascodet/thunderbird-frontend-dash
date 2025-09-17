@@ -117,18 +117,10 @@ export function Chat({
           {messages.length === 0 ? (
             <div className="flex-1 flex flex-col justify-center items-center px-4">
               <div className="text-center mb-8 max-w-3xl">
-                <div className="flex flex-col items-center justify-center gap-4 mb-8">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl flex items-center justify-center">
-                      <span className="text-white text-2xl">⚡</span>
-                    </div>
-                    <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                      Thunderbird Labs
-                    </h1>
-                  </div>
-                  <p className="text-lg text-muted-foreground max-w-md mx-auto text-center">
-                    Your AI-powered gateway to 2,800+ APIs. Chat naturally with any service.
-                  </p>
+                <div className="flex flex-col items-center justify-center gap-3 mb-12">
+                  <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
+                    How can I help you today?
+                  </h1>
                 </div>
               </div>
               
