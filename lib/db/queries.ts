@@ -23,10 +23,11 @@ import { ArtifactKind } from '@/components/artifact';
 // https://authjs.dev/reference/adapter/drizzle
 
 // biome-ignore lint: Forbidden non-null assertion.
-const client = postgres(process.env.POSTGRES_URL!);
-export const db = drizzle(client);
+const client = process.env.POSTGRES_URL ? postgres(process.env.POSTGRES_URL) : null;
+export const db = client ? drizzle(client) : null as any;
 
 export async function getUser(email: string): Promise<Array<User>> {
+  if (!db) return [];
   try {
     return await db.select().from(user).where(eq(user.email, email));
   } catch (error) {
@@ -36,6 +37,7 @@ export async function getUser(email: string): Promise<Array<User>> {
 }
 
 export async function createUser(email: string, password: string) {
+  if (!db) throw new Error('Database not configured');
   const salt = genSaltSync(10);
   const hash = hashSync(password, salt);
 
@@ -95,6 +97,7 @@ export async function getChatsByUserId({ id }: { id: string }) {
 }
 
 export async function getChatById({ id }: { id: string }) {
+  if (!db) return null;
   try {
     const [selectedChat] = await db.select().from(chat).where(eq(chat.id, id));
     return selectedChat;

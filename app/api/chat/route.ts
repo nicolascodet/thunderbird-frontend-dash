@@ -21,7 +21,7 @@ import {
   createDataStreamResponse,
   smoothStream,
 } from "ai"
-import { generateTitleFromUserMessage } from "../../(chat)/actions"
+import { generateTitleFromUserMessage } from "@/app/(chat)/actions"
 import { streamText } from "./streamText"
 
 export const maxDuration = 60
