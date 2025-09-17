@@ -8,7 +8,7 @@ import { useAuthContext } from './session-provider';
 
 export const Overview = () => {
   const { isAuthDisabled, isPersistenceDisabled } = useAuthContext();
-  
+
   return (
     <motion.div
       key="overview"
@@ -20,39 +20,18 @@ export const Overview = () => {
     >
       <div className="flex flex-col gap-6 max-w-xl px-4">
         <div className="rounded-xl p-6 flex flex-col gap-8 leading-relaxed text-center">
-          <p className="flex flex-row justify-center gap-4 items-center">
-            <Image
-              src="/images/pipedream-icon.svg"
-              alt="Pipedream"
-              width={32}
-              height={32}
-              className="size-8 rounded-sm"
-              priority
-            />
-            <span>+</span>
-            <ChatBubbleIcon size={32} />
-          </p>
-          <p>
-            This app uses{" "}
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            Welcome to Thunderbird Labs
+          </h1>
+          <p className="text-lg font-medium">
+            Chat directly with 2,800+ APIs powered by{" "}
             <Link
               className="font-medium underline underline-offset-4"
               href="https://pipedream.com/docs/connect/mcp/developers"
               target="_blank"
             >
-              Pipedream MCP
-            </Link>{" "}
-            to let you chat with any app.
-          </p>
-          <p>
-            With {" "}
-            <Link
-              className="font-medium underline underline-offset-4"
-              href="https://mcp.pipedream.com/"
-              target="_blank"
-            >
-              2,800+ built-in APIs
-            </Link>{" "}
-             {" "}and 10k+ tools, use Pipedream MCP to supercharge your AI app or agent.
+              Pipedream Connect
+            </Link>
           </p>
         </div>
         <InfoBanner isAuthDisabled={isAuthDisabled} isPersistenceDisabled={isPersistenceDisabled} />

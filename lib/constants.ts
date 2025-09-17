@@ -25,9 +25,9 @@ export const BANNER_THEMES = {
 } as const;
 
 // Base metadata used throughout the application
-export const BASE_SITE_URL = 'https://chat.pipedream.com';
-export const BASE_TITLE = 'MCP Chat by Pipedream';
-export const BASE_DESCRIPTION = 'Use MCP Chat by Pipedream to talk directly with 2,800+ APIs and supercharge your productivity';
+export const BASE_SITE_URL = 'https://thunderbird-frontend-dash.vercel.app';
+export const BASE_TITLE = 'Thunderbird Labs';
+export const BASE_DESCRIPTION = 'Chat directly with 2,800+ APIs powered by Thunderbird Labs and supercharge your productivity';
 
 export const BASE_METADATA = {
   metadataBase: new URL(BASE_SITE_URL),
@@ -45,7 +45,7 @@ export const BASE_METADATA = {
         url: '/opengraph-image.png',
         width: 1200,
         height: 630,
-        alt: 'MCP Chat by Pipedream',
+        alt: 'Thunderbird Labs',
       }
     ],
   },
@@ -53,13 +53,13 @@ export const BASE_METADATA = {
     card: 'summary_large_image',
     title: BASE_TITLE,
     description: BASE_DESCRIPTION,
-    creator: '@pipedream',
+    creator: '@thunderbirdlabs',
     images: [
       {
         url: '/twitter-image.png',
         width: 1200,
         height: 630,
-        alt: 'MCP Chat by Pipedream',
+        alt: 'Thunderbird Labs',
       }
     ],
   },
