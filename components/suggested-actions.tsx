@@ -53,29 +53,29 @@ function PureSuggestedActions({ chatId, append }: SuggestedActionsProps) {
   
   const suggestedActions: SuggestedAction[] = [
     {
-      title: 'Help me prep for my next meeting',
-      label: 'and tell me about the attendees',
-      action: 'Help me prep for my next meeting in my Google Calendar by telling me what it is and a bit about who the attendees are using a web search.',
+      title: 'Check my emails',
+      label: 'and summarize important messages',
+      action: 'Check my recent Gmail inbox for important emails and give me a brief summary of anything urgent.',
+      appSlugs: ['app_1TpJxE'],
+      webSearchIcon: false,
+    },
+    {
+      title: 'What\'s on my calendar',
+      label: 'for tomorrow',
+      action: 'Show me my Google Calendar events for tomorrow and highlight any important meetings.',
       appSlugs: ['app_13Gh2V'],
-      webSearchIcon: true,
     },
     {
-      title: 'Tell me about my recent customers',
-      label: 'in Stripe and how much they spent',
-      action: 'Tell me about the most recent 5 customers in Stripe — who are they and how much were their invoices?',
-      appSlugs: ['app_OD5hrX'],
+      title: 'Create a task list',
+      label: 'in Notion for today',
+      action: 'Create a new task list page in Notion for today with sections for urgent, important, and nice-to-have items.',
+      appSlugs: ['app_X7Lhxr'],
     },
     {
-      title: 'Draft a product changelog',
-      label: 'based on recently closed PRs',
-      action: 'Summarize the 10 most recently closed PRs in GitHub and draft a changelog announcement for me in a Notion doc.',
-      appSlugs: ['app_OrZhaO', 'app_X7Lhxr'],
-    },
-    {
-      title: 'Summarize my calendar',
-      label: 'for next week',
-      action: 'Summarize the events on my calendar for next week and give me some of the key takeaway, not every single detail.',
-      appSlugs: ['app_13Gh2V'],
+      title: 'Analyze my GitHub activity',
+      label: 'from the past week',
+      action: 'Show me my GitHub commits and pull requests from the past week and summarize what I worked on.',
+      appSlugs: ['app_OrZhaO'],
     },
   ];
 

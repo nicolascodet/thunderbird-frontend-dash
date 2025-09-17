@@ -117,24 +117,19 @@ export function Chat({
           {messages.length === 0 ? (
             <div className="flex-1 flex flex-col justify-center items-center px-4">
               <div className="text-center mb-8 max-w-3xl">
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 mb-2">
-                  <h1 className="text-3xl font-bold max-w-[280px] sm:max-w-none leading-tight">Welcome to MCP Chat by Pipedream</h1>
-                  <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 mt-1 sm:mt-0">
-                    Alpha
-                  </span>
+                <div className="flex flex-col items-center justify-center gap-4 mb-8">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl flex items-center justify-center">
+                      <span className="text-white text-2xl">⚡</span>
+                    </div>
+                    <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                      Thunderbird Labs
+                    </h1>
+                  </div>
+                  <p className="text-lg text-muted-foreground max-w-md mx-auto text-center">
+                    Your AI-powered gateway to 2,800+ APIs. Chat naturally with any service.
+                  </p>
                 </div>
-                <p 
-                  className="text-muted-foreground max-w-sm mx-auto"
-                >
-                  Chat directly with 2,800+ APIs powered by {" "}
-                  <Link
-                    className="font-medium underline underline-offset-4"
-                    href="https://pipedream.com/docs/connect/mcp/developers"
-                    target="_blank"
-                  >
-                    Pipedream Connect
-                  </Link>
-                </p>
               </div>
               
               {/* Centered input form for home page */}
