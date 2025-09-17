@@ -5,7 +5,6 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { auth } from '../(auth)/auth';
 import Script from 'next/script';
 import { SessionProvider } from '@/components/session-provider';
-import { SignedOutHeader } from '@/components/signed-out-header';
 import { isAuthDisabled, isPersistenceDisabled } from '@/lib/constants';
 import { createGuestSession } from '@/lib/utils';
 
@@ -42,7 +41,6 @@ export default async function Layout({
             </>
           ) : (
             <div className="flex flex-col h-dvh w-full overflow-hidden">
-              <SignedOutHeader />
               <main className="flex-1 overflow-hidden">{children}</main>
             </div>
           )}
