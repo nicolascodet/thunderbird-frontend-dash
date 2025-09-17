@@ -1,20 +1,19 @@
 import { SessionProvider } from '@/components/session-provider';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { createGuestSession } from '@/lib/utils';
+import { auth } from '../(auth)/auth';
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Always use guest session for simplicity
-  const session = createGuestSession();
+  const session = await auth();
 
   return (
     <SessionProvider
-      isAuthDisabled={true}
+      isAuthDisabled={false}
       isPersistenceDisabled={true}
-      guestSession={session}
+      guestSession={undefined}
     >
       <TooltipProvider>
         <div className="flex flex-col h-screen w-full bg-white dark:bg-gray-900">

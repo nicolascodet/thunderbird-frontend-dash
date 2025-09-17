@@ -41,9 +41,18 @@ export async function POST(request: Request) {
       selectedChatModel: string
     } = await request.json()
 
-    // Always use guest session for simplicity
-    const session = { user: { id: 'guest-user' } }
-    const userId = 'guest-user'
+    const session = await getEffectiveSession()
+
+    if (!session || !session.user || !session.user.id) {
+      return new Response(JSON.stringify({ error: "Authentication required", redirectToAuth: true }), {
+        status: 401,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }
+
+    const userId = session.user.id
 
     const userMessage = getMostRecentUserMessage(messages)
 
