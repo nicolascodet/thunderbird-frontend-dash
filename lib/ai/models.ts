@@ -1,4 +1,4 @@
-export const DEFAULT_CHAT_MODEL: string = "claude-sonnet-4-0"
+export const DEFAULT_CHAT_MODEL: string = "gpt-4o-mini"
 
 interface ChatModel {
   id: string
