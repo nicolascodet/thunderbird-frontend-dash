@@ -7,7 +7,7 @@ export const myProvider = customProvider({
       languageModels: {
         "gemini-2.5-flash": google("gemini-2.5-flash"),
         "gpt-4o-mini": openai("gpt-4o-mini"),
-        "gpt-4.1": openai("gpt-4.1-2025-04-14"),
+        "gpt-4.1": openai("gpt-4o"),
         "claude-opus-4-0": anthropic("claude-opus-4-20250514"),
         "claude-sonnet-4-0": anthropic("claude-sonnet-4-20250514"),
         // 'chat-model-reasoning': wrapLanguageModel({
